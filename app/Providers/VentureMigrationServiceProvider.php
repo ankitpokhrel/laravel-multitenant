@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Console\Migration\FreshCommand;
+use App\Console\Migration\InstallCommand;
 use App\Console\Migration\RefreshCommand;
 use App\Console\Migration\ResetCommand;
 use App\Console\Migration\StatusCommand;
@@ -32,6 +33,8 @@ class VentureMigrationServiceProvider extends MigrationServiceProvider
         $this->registerMigrateResetCommand();
 
         $this->registerMigrateFreshCommand();
+
+        $this->registerMigrateInstallCommand();
     }
 
     /**
@@ -103,6 +106,18 @@ class VentureMigrationServiceProvider extends MigrationServiceProvider
     {
         $this->app->singleton('command.migrate.fresh', function () {
             return new FreshCommand;
+        });
+    }
+
+    /**
+     * Register the command.
+     *
+     * @return void
+     */
+    protected function registerMigrateInstallCommand()
+    {
+        $this->app->singleton('command.migrate.install', function ($app) {
+            return new InstallCommand($app['migration.repository']);
         });
     }
 }
